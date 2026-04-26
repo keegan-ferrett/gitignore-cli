@@ -15,6 +15,11 @@ import (
 
 const gitignorePath = ".gitignore"
 
+// version is the CLI's release version. It defaults to "dev" for local
+// builds and is overridden at release time via -ldflags
+// "-X github.com/keegan-ferrett/gitignore/cmd.version=<tag>".
+var version = "dev"
+
 // rootCmd is the entry-point command. Invoking it with a template name
 // (e.g. `gitignore C++`) downloads that template from github/gitignore and
 // writes it to ./.gitignore. With no arguments it prints help.
@@ -25,8 +30,9 @@ var rootCmd = &cobra.Command{
 github/gitignore repository and writes them into a local .gitignore.
 
 Run "gitignore list" to see every available template name.`,
-	Args:         cobra.MaximumNArgs(1),
-	SilenceUsage: true,
+	Version:       version,
+	Args:          cobra.MaximumNArgs(1),
+	SilenceUsage:  true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			return cmd.Help()
